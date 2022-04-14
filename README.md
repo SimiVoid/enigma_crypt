@@ -12,3 +12,4 @@
 * Odczyt pliku
 * Encodowanie i zapis do pliku
 * Decodowanie i zapis do pliku
+* Preudo GUI
