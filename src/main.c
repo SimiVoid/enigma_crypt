@@ -14,7 +14,12 @@ enum operation_t parse_args(int argc, char **argv);
 int main(int argc, char *argv[]) {
     enum operation_t operation_type = parse_args(argc, argv);
 
-    
+    if(operation_type == HELP) {
+        // TODO: print help
+    }
+    else if(operation_type == GUI) {
+        // TODO: operate in GUI mode
+    }
 
     return 0;
 }
