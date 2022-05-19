@@ -4,12 +4,17 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <enigma_encoding.h>
 #include <operation_type.h>
 
 char* input_file_path;
 char* output_file_path;
 
 enum operation_t parse_args(int argc, char **argv);
+
+char* read_input_file(void);
+char* read_stdin(void);
+int write_output_file(char* output_file_content);
 
 int main(int argc, char *argv[]) {
     enum operation_t operation_type = parse_args(argc, argv);
@@ -20,8 +25,77 @@ int main(int argc, char *argv[]) {
     else if(operation_type == GUI) {
         // TODO: operate in GUI mode
     }
+    else if(operation_type == ENCODING_FILEIN_STDOUT) {
+        char* input_file_content = read_input_file();
+        if(input_file_content == NULL) {
+            return EXIT_FAILURE;
+        }
 
-    return 0;
+    }
+    else if(operation_type == DECODING_FILEIN_STDOUT) {
+        char* input_file_content = read_input_file();
+        if(input_file_content == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        char* encoded = enigma_encoding(input_file_content);
+
+        if(encoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        printf("%s", encoded);
+    }
+    else if(operation_type == ENCODING_STDIN_FILEOUT) {
+        char* input_text_content = read_stdin();
+        char* encoded = enigma_encoding(input_text_content);
+
+        if(encoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        write_output_file(encoded);
+    }
+    else if(operation_type == DECODING_STDIN_FILEOUT) {
+        char* input_text_content = read_stdin();
+    }
+    else if(operation_type == ENCODING_STDIO) {
+        char* input_text_content = read_stdin();
+        char* encoded = enigma_encoding(input_text_content);
+
+        if(encoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        printf("%s", encoded);
+    }
+    else if(operation_type == DECODING_STDIO) {
+        char* input_text_content = read_stdin();
+    }
+    else if(operation_type == ENCODING_FILE) {
+        char* input_file_content = read_input_file();
+        if(input_file_content == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        char* encoded = enigma_encoding(input_file_content);
+        if(encoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        write_output_file(encoded);
+    }
+    else if(operation_type == DECODING_FILE) {
+        char* input_file_content = read_input_file();
+        if(input_file_content == NULL) {
+            return EXIT_FAILURE;
+        }
+    }
+    else if(operation_type == UNKNOWN) {
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 
 enum operation_t parse_args(int argc, char** argv) {
@@ -128,4 +202,56 @@ enum operation_t parse_args(int argc, char** argv) {
     }
 
     return HELP;
+}
+
+char* read_input_file(void) {
+    FILE* input_file = fopen(input_file_path, "rb");
+    if(input_file == NULL) {
+        fprintf(stderr, "Error: cannot open input file\n");
+        return NULL;
+    }
+
+    fseek(input_file, 0, SEEK_END);
+    long input_file_size = ftell(input_file);
+    fseek(input_file, 0, SEEK_SET);
+
+    char* input_file_buffer = malloc(input_file_size + 1);
+    if(input_file_buffer == NULL) {
+        fprintf(stderr, "Error: cannot allocate memory for input file buffer\n");
+        return NULL;
+    }
+
+    if(fread(input_file_buffer, input_file_size, 1, input_file) != 1) {
+        fprintf(stderr, "Error: cannot read input file\n");
+        return NULL;
+    }
+    fclose(input_file);
+
+    input_file_buffer[input_file_size] = 0;
+
+    return input_file_buffer;
+}
+
+char* read_stdin(void) {
+    printf("Insert input text: ");
+
+    char* input_buffer = NULL;
+
+    size_t len = 0;
+    ssize_t line_size = getline(&input_buffer, &len, stdin);
+
+    return input_buffer;
+}
+
+int write_output_file(char* output_file_content) {
+    FILE* output_file = fopen(output_file_path, "wb");
+    if(output_file == NULL) {
+        fprintf(stderr, "Error: cannot open output file\n");
+        return -1;
+    }
+
+    fwrite(output_file_content, strlen(output_file_content), 1, output_file);
+    fclose(output_file);
+
+    return 0;
 }
