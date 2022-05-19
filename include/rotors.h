@@ -4,6 +4,8 @@
 #define ROTORS_COUNT 11
 #define REFLECTORS_COUNT 5
 
+#include <stddef.h>
+
 const char* rotors[ROTORS_COUNT] = {
      "abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?", // input alphabet
      "ekmflgdqvzntowyhxuspaibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~", // rotor 1
