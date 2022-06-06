@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include <enigma_encoding.h>
+#include <enigma_decoding.h>
 #include <operation_type.h>
 
 char* input_file_path;
@@ -31,6 +32,14 @@ int main(int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
+        char* encoded = enigma_encoding(input_file_content);
+        
+        if(encoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+                printf("%s", encoded);
+
     }
     else if(operation_type == DECODING_FILEIN_STDOUT) {
         char* input_file_content = read_input_file();
@@ -38,13 +47,13 @@ int main(int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
-        char* encoded = enigma_encoding(input_file_content);
+        char* decoded = enigma_decoding(input_file_content);
 
-        if(encoded == NULL) {
+        if(decoded == NULL) {
             return EXIT_FAILURE;
         }
 
-        printf("%s", encoded);
+        printf("%s", decoded);
     }
     else if(operation_type == ENCODING_STDIN_FILEOUT) {
         char* input_text_content = read_stdin();
@@ -58,6 +67,13 @@ int main(int argc, char *argv[]) {
     }
     else if(operation_type == DECODING_STDIN_FILEOUT) {
         char* input_text_content = read_stdin();
+        char* decoded = enigma_decoding(input_text_content);
+
+        if(decoded == NULL) {
+            return EXIT_FAILURE;
+        }
+        
+        write_output_file(decoded);
     }
     else if(operation_type == ENCODING_STDIO) {
         char* input_text_content = read_stdin();
@@ -71,6 +87,13 @@ int main(int argc, char *argv[]) {
     }
     else if(operation_type == DECODING_STDIO) {
         char* input_text_content = read_stdin();
+        char* decoded = enigma_decoding(input_text_content);
+
+        if(decoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        printf("%s", decoded);
     }
     else if(operation_type == ENCODING_FILE) {
         char* input_file_content = read_input_file();
@@ -90,6 +113,13 @@ int main(int argc, char *argv[]) {
         if(input_file_content == NULL) {
             return EXIT_FAILURE;
         }
+
+        char* decoded = enigma_decoding(input_file_content);
+        if(decoded == NULL) {
+            return EXIT_FAILURE;
+        }
+
+        write_output_file(decoded);
     }
     else if(operation_type == UNKNOWN) {
         return EXIT_FAILURE;

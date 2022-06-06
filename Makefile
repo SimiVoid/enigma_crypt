@@ -1,6 +1,6 @@
 PROJECT_NAME = enygma_crypt
 INC_DIR = ./include
-GCC_PARAMS = -O3 -I$(INC_DIR)
+GCC_PARAMS = -O3 -I$(INC_DIR) -g
 
 src_files = $(shell find -name "*.c")
 

@@ -4,6 +4,6 @@
 #include <enigma.h>
 
 char* enigma_encoding(char* input);
-char encrypt_char(char c);
+static char encrypt_char(char c);
 
 #endif

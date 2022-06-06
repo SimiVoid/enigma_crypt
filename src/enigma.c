@@ -1,65 +1,226 @@
 #include <enigma.h>
 
+#include <stdlib.h>
 #include <string.h>
 
-extern uint8_t rotors_count;
-extern uint8_t refrectors_count;
-extern uint8_t rotors_position[ROTORS_COUNT];
-extern char char_window[ROTORS_COUNT];
-extern char init_window[ROTORS_COUNT];
-extern char* rotor_wiring[ROTORS_COUNT];
-extern char rotor_switch_pos[ROTORS_COUNT];
-extern char encryption_step[REFLECTORS_COUNT];
-extern char* plugboard_wiring;
+uint8_t rotors_count;
+uint8_t steps;
+int rotors_position[ROTORS_COUNT];
+char char_window[ROTORS_COUNT];
+char init_window[ROTORS_COUNT];
+char* rotor_wiring[ROTORS_COUNT];
+char rotor_switch_pos[ROTORS_COUNT];
+int rotor_number[ROTORS_COUNT];
+char encryption_step[REFLECTORS_COUNT];
+char* reflector;
+char plugboard_wiring[N_CHARS + 1];
+int reflector_type;
+uint8_t rotor_step[STEP_COUNT];
 
 void init_enigma(void) {
-    asm volatile("  mov %0, 3\n\
-                    mov %1, %0\n\
-                    shl $0x01, %1\n\
-                    add %1, 3\n"
-                : "=r"(rotors_count), "=r"(refrectors_count));
+    asm volatile("  mov $3, %0\n\
+                    mov %0, %1\n\
+                    shl $1, %1\n\
+                    add $3, %1\n"
+                : "=r"(rotors_count), "=r"(steps));
 
     strcpy(plugboard_wiring, plugboards);
 
-    // asm volatile("  mov %%ecx, 0\n\
-    //                 loop1:\n\
-    //                     mov (%2, %%ecx, 70), (%0, %%ecx, 70)\n\
-    //                     inc %%ecx\n\
-    //                     cmp %%ecx, %1\n\
-    //                     jne loop1\n\
-    //             "
-    //             : "+m"(rotor_wiring)
-    //             : "m"(rotors_count), "m"(rotors));
+    for(int i = 0; i < rotors_count; i++) {
+        rotor_wiring[i] = rotors[i];
+        rotor_number[i] = i;
+        rotor_switch_pos[i] = notches[i];
+        init_window[i] = 'A';
+        char_window[i] = 'A';
+    }
 
-    // asm volatile("  mov %%ecx, 0\n\
-    //                 loop2:\n\
-    //                     mov (%2, %%ecx, 1), (%0, %%ecx, 1)\n\
-    //                     inc %%ecx\n\
-    //                     cmp %%ecx, %1\n\
-    //                     jne loop2\n\
+    // asm volatile("  lea %0, %%eax\n\
+    //                 lea %1, %%ebx\n\
+    //                 lea %2, %%ecx\n\
+    //                 mov %%ecx, %%ebx\n\
+    //                 mov %%ecx, %%eax\n\
     //             "
-    //             : "+m"(rotor_switch_pos)
-    //             : "m"(rotors_count), "m"(notches));
+    //             : "+m"(rotor_wiring), "+m"(rotors)
+    //             : "m"(notches));
 
-    // asm volatile("  mov %%ecx, 0\n\
+
+
+    // asm volatile("  xorl %%esi, %%esi\n\
+    //                 mov %0, %%ebx\n\
     //                 loop3:\n\
-    //                     mov %%ecx, (%0, %%ecx) \n\
-    //                     inc %%ecx\n\
-    //                     cmp %%ecx, %1\n\
-    //                     jne loop3\n\
+    //                     mov %%esi, (%%ebx, %%esi, 1)\n\
+    //                     incl %%esi\n\
+    //                     cmp %%esi, %1\n\
+    //                     jl loop3\n\
     //             "
     //             : "+m"(encryption_step)
     //             : "m"(rotors_count));
 
-    // asm volatile("  mov %%ecx, 0\n\
-    //                 mov %%ax, 97\n\
+    // asm volatile("  xorl %%esi, %%esi\n\
+    //                 movl $97, %%eax \n\
+    //                 lea %0, %%ebx\n\
+    //                 lea %1, %%ecx\n\
     //                 loop4:\n\
-    //                     mov %%al, (%0, %%ecx)  \n\
-    //                     mov %%al, (%1, %%ecx) \n\
-    //                     inc %%ecx\n\
-    //                     cmp %%ecx, %2\n\
+    //                     mov %%eax, (%%ebx, %%eax, 1)\n\
+    //                     mov %%eax, (%%ebx, %%eax, 1)\n\
+    //                     inc %%esi\n\
+    //                     cmp %%esi, %2\n\
     //                     jne loop4\n\
     //             "
     //             : "+m"(char_window), "+m"(init_window)
     //             : "m"(rotors_count));
+
+    reflector = (char*)refrectors[1];
+    reflector_type = 1;   
+}
+
+int idx_of(char c) {
+    int return_value = 0;
+    int nChars = N_CHARS;
+
+    // asm volatile("  xorl %%esi, %%esi\n\
+    //                 movb %1, %%bl\n\
+    //                 movb %2, %%cl\n\
+    //                 loop_idx_%=:\n\
+    //                     cmp %%esi, %3\n\
+    //                     jge end_idx_%=\n\
+    //                     cmpb %%cl, (%%ebx, %%esi, 1)\n\
+    //                     jne end_idx_%=\n\
+    //                     inc %%esi\n\
+    //                     jmp loop_idx_%=\n\
+    //                 end_idx_%=:\n\
+    //                     mov %%esi, %0\n\
+    //                     ret"
+    //             : "+m" (return_value)
+    //             : "m" (input_alphabet), "m" (c), "m" (nChars)
+    // );
+
+    while(return_value < N_CHARS && input_alphabet[return_value] != c) {
+        return_value++;
+    }
+
+    return return_value;
+}
+
+void set_rotor_and_reflector(char** rotors_cfg, char* reflectors_cfg) {
+    int i, n, rotor, rotor_pos;
+    char ch_temp, ring_pos;
+
+    rotors_count = rotors_cfg[0][0] - '0';
+    if(rotors_count > 4)
+        rotors_count = 4;
+    
+    steps = (rotors_count << 1) + 3;
+
+    for(i = 1; i <= rotors_count; i++) {
+        ch_temp = rotors_cfg[i][0];
+
+        if(ch_temp >= '0' && ch_temp <= '9') {
+            rotor = ch_temp - '0';
+        }
+        else {
+            ch_temp = tolower(ch_temp);
+            rotor = ch_temp == 'b' ? 9 : ch_temp == 'g' ? 10 : 0;
+        }
+        rotor_pos = rotors_cfg[i][1] - '0';
+        ring_pos = rotors_cfg[i][2];
+        init_window[rotor_pos] = char_window[rotor_pos] = ring_pos;
+        setup_rotor(rotor_pos, rotor);
+    }
+
+    ch_temp = reflectors_cfg[0];
+
+    if(ch_temp == 't')
+        n = 0;
+    else if(ch_temp == 'b')
+        n = 1;
+    else if(ch_temp == 'c')
+        n = 2;
+    else if(ch_temp == 'B')
+        n = 3;
+    else if(ch_temp == 'C')
+        n = 4;
+    else n = 0;
+
+    reflector = (char*)refrectors[n];
+    reflector_type = n;
+}
+
+void set_plugboards(char* cfg) {
+    int i, x;
+    char p1, p2, ch_temp;
+    size_t n = strlen(cfg);
+
+    for (i = 0; i < n; i++) {
+        p1 = cfg[i];
+        p2 = cfg[i + 1];
+        x = idx_of(p1);
+        ch_temp = plugboard_wiring[x];
+        if(ch_temp != p1) {
+            plugboard_wiring[idx_of(ch_temp)] = ch_temp;
+            plugboard_wiring[x] = p1;
+        }
+        plugboard_wiring[x] = p2;
+        x = idx_of(p2);
+        ch_temp = plugboard_wiring[x];
+        if(ch_temp != p2) {
+            plugboard_wiring[idx_of(ch_temp)] = ch_temp;
+            plugboard_wiring[x] = p1;
+        }
+        plugboard_wiring[x] = p1;
+    }
+}
+
+void setup_rotor(int pos, int r) {
+    rotor_wiring[pos] = (char*)rotors[r];
+    rotor_switch_pos[pos] = notches[r];
+    rotor_number[pos] = r;
+}
+
+char r_to_l_path(char c, int rotor_num) {
+    char* rotor = rotor_wiring[rotor_num];
+    int offset = idx_of(rotor[rotors_position[rotor_num]]);
+    return input_alphabet[(idx_of(rotor[(idx_of(c) + offset) % N_CHARS]) - offset) % N_CHARS];
+}
+
+char l_to_r_path(char c, int rotor_num) {
+    char* rotor = rotor_wiring[rotor_num];
+    int offset = idx_of(rotor[rotors_position[rotor_num]]);
+    int new_char = input_alphabet[(idx_of(c) + offset) % N_CHARS];
+    int m = 0;
+
+    while(m < N_CHARS && rotor[m] != new_char) m++;
+    
+    return input_alphabet[(m - offset) % N_CHARS];
+}
+
+void turn_rotors() {
+    char* r1 = rotor_wiring[1];
+    char* r2 = rotor_wiring[2];
+    char* r3 = rotors_count > 3 ? rotor_wiring[3] : NULL;
+    uint8_t rotate[ROTORS_COUNT];
+    rotate[1] = 1;
+
+    for(int i = 2; i <= rotors_count; i++)
+        rotate[i] = 0;
+    
+    if(rotor_switch_pos[1] == r1[rotors_position[1]]
+        || rotor_switch_pos[2] == r2[rotors_position[2]])
+        rotate[1] = 1;
+    if(rotor_switch_pos[2] == r2[rotors_position[2]])
+        rotate[3] = 1;
+    if(rotors_count > 3 && rotor_switch_pos[3] == r3[rotors_position[3]])
+        rotate[4] = 1;
+
+    for(int i = 1; i <= rotors_count; i++) 
+        turn_single_rotor(i, rotate[i]);
+}
+
+int turn_single_rotor(int rotor_num, int step) {
+    if(step <= 0) return -1;
+
+    rotors_position[rotor_num] = (rotors_position[rotor_num] + step) % N_CHARS;
+    char_window[rotor_num] = rotor_wiring[rotor_num][rotors_position[rotor_num]];
+
+    return step;
 }
