@@ -22,7 +22,6 @@ extern uint8_t rotor_step[STEP_COUNT];
 
 void init_enigma(void);
 
-int idx_of(char c);
 void set_rotor_and_reflector(char** rotors_cfg, char* reflectors_cfg);
 void set_plugboards(char* cfg);
 void setup_rotor(int pos, int r);

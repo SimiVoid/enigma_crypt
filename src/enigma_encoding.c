@@ -37,15 +37,15 @@ static char encrypt_char(char c) {
     int i = 0;
 
     turn_rotors();
-    rotor_step[i++] = plugboard_wiring[idx_of(c)];
+    rotor_step[i++] = plugboard_wiring[idx_of(c, input_alphabet)];
     for(r = 0; r < rotors_count; ++r) {
         rotor_step[i++] = r_to_l_path(rotor_step[i-1], r);
     }
-    rotor_step[i++] = reflector[idx_of(rotor_step[i-1])];
+    rotor_step[i++] = reflector[idx_of(rotor_step[i-1], input_alphabet)];
 
     for(r = rotors_count - 1; r > 0; --r) {
         rotor_step[i++] = l_to_r_path(rotor_step[i-1], r);
     }
 
-    return plugboard_wiring[idx_of(rotor_step[i-1])];
+    return plugboard_wiring[idx_of(rotor_step[i-1], input_alphabet)];
 }

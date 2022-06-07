@@ -17,6 +17,8 @@ char plugboard_wiring[N_CHARS + 1];
 int reflector_type;
 uint8_t rotor_step[STEP_COUNT];
 
+extern int idx_of(char c, const char* collection);
+
 void init_enigma(void) {
     asm volatile("  mov $3, %0\n\
                     mov %0, %1\n\
@@ -34,72 +36,8 @@ void init_enigma(void) {
         char_window[i] = 'A';
     }
 
-    // asm volatile("  lea %0, %%eax\n\
-    //                 lea %1, %%ebx\n\
-    //                 lea %2, %%ecx\n\
-    //                 mov %%ecx, %%ebx\n\
-    //                 mov %%ecx, %%eax\n\
-    //             "
-    //             : "+m"(rotor_wiring), "+m"(rotors)
-    //             : "m"(notches));
-
-
-
-    // asm volatile("  xorl %%esi, %%esi\n\
-    //                 mov %0, %%ebx\n\
-    //                 loop3:\n\
-    //                     mov %%esi, (%%ebx, %%esi, 1)\n\
-    //                     incl %%esi\n\
-    //                     cmp %%esi, %1\n\
-    //                     jl loop3\n\
-    //             "
-    //             : "+m"(encryption_step)
-    //             : "m"(rotors_count));
-
-    // asm volatile("  xorl %%esi, %%esi\n\
-    //                 movl $97, %%eax \n\
-    //                 lea %0, %%ebx\n\
-    //                 lea %1, %%ecx\n\
-    //                 loop4:\n\
-    //                     mov %%eax, (%%ebx, %%eax, 1)\n\
-    //                     mov %%eax, (%%ebx, %%eax, 1)\n\
-    //                     inc %%esi\n\
-    //                     cmp %%esi, %2\n\
-    //                     jne loop4\n\
-    //             "
-    //             : "+m"(char_window), "+m"(init_window)
-    //             : "m"(rotors_count));
-
     reflector = (char*)refrectors[1];
     reflector_type = 1;   
-}
-
-int idx_of(char c) {
-    int return_value = 0;
-    int nChars = N_CHARS;
-
-    // asm volatile("  xorl %%esi, %%esi\n\
-    //                 movb %1, %%bl\n\
-    //                 movb %2, %%cl\n\
-    //                 loop_idx_%=:\n\
-    //                     cmp %%esi, %3\n\
-    //                     jge end_idx_%=\n\
-    //                     cmpb %%cl, (%%ebx, %%esi, 1)\n\
-    //                     jne end_idx_%=\n\
-    //                     inc %%esi\n\
-    //                     jmp loop_idx_%=\n\
-    //                 end_idx_%=:\n\
-    //                     mov %%esi, %0\n\
-    //                     ret"
-    //             : "+m" (return_value)
-    //             : "m" (input_alphabet), "m" (c), "m" (nChars)
-    // );
-
-    while(return_value < N_CHARS && input_alphabet[return_value] != c) {
-        return_value++;
-    }
-
-    return return_value;
 }
 
 void set_rotor_and_reflector(char** rotors_cfg, char* reflectors_cfg) {
@@ -154,17 +92,17 @@ void set_plugboards(char* cfg) {
     for (i = 0; i < n; i++) {
         p1 = cfg[i];
         p2 = cfg[i + 1];
-        x = idx_of(p1);
+        x = idx_of(p1, input_alphabet);
         ch_temp = plugboard_wiring[x];
         if(ch_temp != p1) {
-            plugboard_wiring[idx_of(ch_temp)] = ch_temp;
+            plugboard_wiring[idx_of(ch_temp, input_alphabet)] = ch_temp;
             plugboard_wiring[x] = p1;
         }
         plugboard_wiring[x] = p2;
-        x = idx_of(p2);
+        x = idx_of(p2, input_alphabet);
         ch_temp = plugboard_wiring[x];
         if(ch_temp != p2) {
-            plugboard_wiring[idx_of(ch_temp)] = ch_temp;
+            plugboard_wiring[idx_of(ch_temp, input_alphabet)] = ch_temp;
             plugboard_wiring[x] = p1;
         }
         plugboard_wiring[x] = p1;
@@ -179,14 +117,14 @@ void setup_rotor(int pos, int r) {
 
 char r_to_l_path(char c, int rotor_num) {
     char* rotor = rotor_wiring[rotor_num];
-    int offset = idx_of(rotor[rotors_position[rotor_num]]);
-    return input_alphabet[(idx_of(rotor[(idx_of(c) + offset) % N_CHARS]) - offset) % N_CHARS];
+    int offset = idx_of(rotor[rotors_position[rotor_num]], input_alphabet);
+    return input_alphabet[(idx_of(rotor[(idx_of(c, input_alphabet) + offset) % N_CHARS], input_alphabet) - offset) % N_CHARS];
 }
 
 char l_to_r_path(char c, int rotor_num) {
     char* rotor = rotor_wiring[rotor_num];
-    int offset = idx_of(rotor[rotors_position[rotor_num]]);
-    int new_char = input_alphabet[(idx_of(c) + offset) % N_CHARS];
+    int offset = idx_of(rotor[rotors_position[rotor_num]], input_alphabet);
+    int new_char = input_alphabet[(idx_of(c, input_alphabet) + offset) % N_CHARS];
     int m = 0;
 
     while(m < N_CHARS && rotor[m] != new_char) m++;
