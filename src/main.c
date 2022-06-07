@@ -28,30 +28,25 @@ int main(int argc, char *argv[]) {
     }
     else if(operation_type == ENCODING_FILEIN_STDOUT) {
         char* input_file_content = read_input_file();
-        if(input_file_content == NULL) {
+        if(input_file_content == NULL)
             return EXIT_FAILURE;
-        }
 
         char* encoded = enigma_encoding(input_file_content);
         
-        if(encoded == NULL) {
+        if(encoded == NULL)
             return EXIT_FAILURE;
-        }
 
-                printf("%s", encoded);
-
+        printf("%s", encoded);
     }
     else if(operation_type == DECODING_FILEIN_STDOUT) {
         char* input_file_content = read_input_file();
-        if(input_file_content == NULL) {
+        if(input_file_content == NULL)
             return EXIT_FAILURE;
-        }
 
         char* decoded = enigma_decoding(input_file_content);
 
-        if(decoded == NULL) {
+        if(decoded == NULL)
             return EXIT_FAILURE;
-        }
 
         printf("%s", decoded);
     }
@@ -59,9 +54,8 @@ int main(int argc, char *argv[]) {
         char* input_text_content = read_stdin();
         char* encoded = enigma_encoding(input_text_content);
 
-        if(encoded == NULL) {
+        if(encoded == NULL)
             return EXIT_FAILURE;
-        }
 
         write_output_file(encoded);
     }
@@ -69,9 +63,8 @@ int main(int argc, char *argv[]) {
         char* input_text_content = read_stdin();
         char* decoded = enigma_decoding(input_text_content);
 
-        if(decoded == NULL) {
+        if(decoded == NULL)
             return EXIT_FAILURE;
-        }
         
         write_output_file(decoded);
     }
@@ -79,9 +72,8 @@ int main(int argc, char *argv[]) {
         char* input_text_content = read_stdin();
         char* encoded = enigma_encoding(input_text_content);
 
-        if(encoded == NULL) {
+        if(encoded == NULL)
             return EXIT_FAILURE;
-        }
 
         printf("%s", encoded);
     }
@@ -89,44 +81,39 @@ int main(int argc, char *argv[]) {
         char* input_text_content = read_stdin();
         char* decoded = enigma_decoding(input_text_content);
 
-        if(decoded == NULL) {
+        if(decoded == NULL)
             return EXIT_FAILURE;
-        }
 
         printf("%s", decoded);
     }
     else if(operation_type == ENCODING_FILE) {
         char* input_file_content = read_input_file();
-        if(input_file_content == NULL) {
+        if(input_file_content == NULL)
             return EXIT_FAILURE;
-        }
 
         char* encoded = enigma_encoding(input_file_content);
-        if(encoded == NULL) {
+        if(encoded == NULL)
             return EXIT_FAILURE;
-        }
 
         write_output_file(encoded);
     }
     else if(operation_type == DECODING_FILE) {
         char* input_file_content = read_input_file();
-        if(input_file_content == NULL) {
+        if(input_file_content == NULL)
             return EXIT_FAILURE;
-        }
 
         char* decoded = enigma_decoding(input_file_content);
-        if(decoded == NULL) {
+        if(decoded == NULL)
             return EXIT_FAILURE;
-        }
 
         write_output_file(decoded);
     }
-    else if(operation_type == UNKNOWN) {
-        return EXIT_FAILURE;
-    }
+    else return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
+
+#pragma GCC optimize ("O3")
 
 enum operation_t parse_args(int argc, char** argv) {
     char* arg;
@@ -142,18 +129,10 @@ enum operation_t parse_args(int argc, char** argv) {
     while(it < argc) {
         arg = argv[it++];
 
-        if(strcmp(arg, "-e") == 0 || strcmp(arg, "--encoding") == 0) {
-            encoding = true;
-        }
-        else if(strcmp(arg, "-d") == 0 || strcmp(arg, "--decoding") == 0) {
-            decoding = true;
-        }
-        else if(strcmp(arg, "-h") == 0 || strcmp(arg, "--help") == 0) {
-            return HELP;
-        }
-        else if(strcmp(arg, "-g") == 0 || strcmp(arg, "--gui") == 0) {
-            return GUI;
-        }
+        if(strcmp(arg, "-h") == 0 || strcmp(arg, "--help") == 0) return HELP;
+        else if(strcmp(arg, "-g") == 0 || strcmp(arg, "--gui") == 0) return GUI;
+        else if(strcmp(arg, "-e") == 0 || strcmp(arg, "--encoding") == 0) encoding = true;
+        else if(strcmp(arg, "-d") == 0 || strcmp(arg, "--decoding") == 0) decoding = true;
         else if(strcmp(arg, "-i") == 0) {
             if(it < argc) {
                 arg = argv[it++];
@@ -206,30 +185,14 @@ enum operation_t parse_args(int argc, char** argv) {
         printf("You must specify either -o stdout or -o file\n");
         return UNKNOWN;
     }
-    if(file_input && file_output && encoding) {
-        return ENCODING_FILE;
-    }
-    if(file_input && file_output && decoding) {
-        return DECODING_FILE;
-    }
-    if(file_input && std_output && encoding) {
-        return ENCODING_FILEIN_STDOUT;
-    }
-    if(file_input && std_output && decoding) {
-        return DECODING_FILEIN_STDOUT;
-    }
-    if(std_input && std_output && encoding) {
-        return ENCODING_STDIO;
-    }
-    if(std_input && std_output && decoding) {
-        return DECODING_STDIO;
-    }
-    if(std_input && file_output && encoding) {
-        return ENCODING_STDIN_FILEOUT;
-    }
-    if(std_input && file_output && decoding) {
-        return DECODING_STDIN_FILEOUT;
-    }
+    if(file_input && file_output && encoding) return ENCODING_FILE;
+    if(file_input && file_output && decoding) return DECODING_FILE;
+    if(file_input && std_output && encoding) return ENCODING_FILEIN_STDOUT;
+    if(file_input && std_output && decoding) return DECODING_FILEIN_STDOUT;
+    if(std_input && std_output && encoding) return ENCODING_STDIO;
+    if(std_input && std_output && decoding) return DECODING_STDIO;
+    if(std_input && file_output && encoding) return ENCODING_STDIN_FILEOUT;
+    if(std_input && file_output && decoding) return DECODING_STDIN_FILEOUT;
 
     return HELP;
 }
@@ -285,3 +248,5 @@ int write_output_file(char* output_file_content) {
 
     return 0;
 }
+
+#pragma GCC optimize("O0")

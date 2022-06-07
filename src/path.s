@@ -13,12 +13,12 @@ r_to_l_path:
         movq    %r8, %rbx
         movslq  %esi, %rsi
         movq    (%rdx,%rsi,8), %r12
-        movslq  (%rcx,%rsi,4), %rax ; calculate offset
+        movslq  (%rcx,%rsi,4), %rax
         movsbl  (%r12,%rax), %edi
         movq    %r8, %rsi
         call    idx_of
         movl    %eax, %ebp
-        movsbl  %r13b, %edi ; get returned value from alphabet
+        movsbl  %r13b, %edi
         movq    %rbx, %rsi
         call    idx_of
         addl    %ebp, %eax
@@ -63,12 +63,12 @@ l_to_r_path:
         movq    %r8, %rbx
         movslq  %esi, %rsi
         movq    (%rdx,%rsi,8), %rbp
-        movslq  (%rcx,%rsi,4), %rax ; calculate offset
+        movslq  (%rcx,%rsi,4), %rax
         movsbl  0(%rbp,%rax), %edi
         movq    %r8, %rsi
         call    idx_of
         movl    %eax, %r12d
-        movsbl  %r13b, %edi ; get new char from alphabet
+        movsbl  %r13b, %edi
         movq    %rbx, %rsi
         call    idx_of
         addl    %r12d, %eax
@@ -84,7 +84,7 @@ l_to_r_path:
         movzbl  (%rbx,%rax), %ecx
         movq    %rbp, %rdx
         movl    $0, %eax
-.loop: ; while loop
+.loop:
         cmpb    (%rdx), %cl
         je      .end
         addl    $1, %eax

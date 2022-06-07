@@ -5,8 +5,8 @@
 * Parsowanie przełączników:
     * -e - encoding
     * -d - decoding
-    * -o str - nazwa pliku wyjściowego
-    * -i str - nazwa pliku wejściowego
+    * -o str - nazwa pliku wyjściowego / stdout
+    * -i str - nazwa pliku wejściowego / stdin
     * -g - interfejs graficzny (w cli)
 
 * Odczyt pliku
