@@ -27,9 +27,6 @@ void set_plugboards(char* cfg);
 void setup_rotor(int pos, int r);
 void set_rotor_position();
 
-char r_to_l_path(char c, int rotor_num);
-char l_to_r_path(char c, int rotor_num);
-
 void turn_rotors();
 int turn_single_rotor(int rotor_num, int step);
 

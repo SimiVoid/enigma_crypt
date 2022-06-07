@@ -4,6 +4,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+extern int idx_of(char c, const char* collection);
+extern char r_to_l_path(char c, int rotor_number, char** rotor_wiring, int* rotor_pos, const char* alphabet);
+extern char l_to_r_path(char c, int rotor_number, char** rotor_wiring, int* rotor_pos, const char* alphabet);
+
 char* default_rotor_reflector_cfg[] = {
             "3avbdfhjlcprtxvznyeiwgakmusqo13579,2(['/-&;*48+60.:\"]) ?><\\|}{=^_%$#@!`~",
             "2aeajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~",
@@ -39,12 +43,12 @@ static char encrypt_char(char c) {
     turn_rotors();
     rotor_step[i++] = plugboard_wiring[idx_of(c, input_alphabet)];
     for(r = 0; r < rotors_count; ++r) {
-        rotor_step[i++] = r_to_l_path(rotor_step[i-1], r);
+        rotor_step[i++] = r_to_l_path(rotor_step[i-1], r, rotor_wiring, rotors_position, input_alphabet);
     }
     rotor_step[i++] = reflector[idx_of(rotor_step[i-1], input_alphabet)];
 
     for(r = rotors_count - 1; r > 0; --r) {
-        rotor_step[i++] = l_to_r_path(rotor_step[i-1], r);
+        rotor_step[i++] = l_to_r_path(rotor_step[i-1], r, rotor_wiring, rotors_position, input_alphabet);
     }
 
     return plugboard_wiring[idx_of(rotor_step[i-1], input_alphabet)];

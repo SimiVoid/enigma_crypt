@@ -115,23 +115,6 @@ void setup_rotor(int pos, int r) {
     rotor_number[pos] = r;
 }
 
-char r_to_l_path(char c, int rotor_num) {
-    char* rotor = rotor_wiring[rotor_num];
-    int offset = idx_of(rotor[rotors_position[rotor_num]], input_alphabet);
-    return input_alphabet[(idx_of(rotor[(idx_of(c, input_alphabet) + offset) % N_CHARS], input_alphabet) - offset) % N_CHARS];
-}
-
-char l_to_r_path(char c, int rotor_num) {
-    char* rotor = rotor_wiring[rotor_num];
-    int offset = idx_of(rotor[rotors_position[rotor_num]], input_alphabet);
-    int new_char = input_alphabet[(idx_of(c, input_alphabet) + offset) % N_CHARS];
-    int m = 0;
-
-    while(m < N_CHARS && rotor[m] != new_char) m++;
-    
-    return input_alphabet[(m - offset) % N_CHARS];
-}
-
 void turn_rotors() {
     char* r1 = rotor_wiring[1];
     char* r2 = rotor_wiring[2];
