@@ -8,24 +8,24 @@ extern int idx_of(char c, const char* collection);
 extern char r_to_l_path(char c, int rotor_number, char** rotor_wiring, int* rotor_pos, const char* alphabet);
 extern char l_to_r_path(char c, int rotor_number, char** rotor_wiring, int* rotor_pos, const char* alphabet);
 
-char* default_rotor_reflector_cfg[] = {
+const char* default_rotor_reflector_cfg[] = {
             "3avbdfhjlcprtxvznyeiwgakmusqo13579,2(['/-&;*48+60.:\"]) ?><\\|}{=^_%$#@!`~",
             "2aeajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~",
             "1aqekmflgdqvzntowyhxuspaibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~",
             "byruhqsldpxngokmiebfzcwvjat*[\"7)],3(/;6 .:8415&2+-90'?<>\\|}{=_^%$#@`!~"
         };
+const char* default_plugboards_cfg = "abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?\n\
+                                    abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?";
+const char* default_notch_cfg =  "bdfhjlcprtxvznyeiwg->akmusqo13579,2(['/-&;*48+60.:\"]) ?><\\|}{=^_%$#@!`~\n\
+        ->ajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~\n\
+        ekmflgdqvzntowyhxusp->aibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~";
 
 char* enigma_encoding(char* input) {
     init_enigma();
 
     // init rotors
-    set_plugboards("abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?\n\
-                    abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?");
-    set_rotor_and_reflector(default_rotor_reflector_cfg,
-        "bdfhjlcprtxvznyeiwg->akmusqo13579,2(['/-&;*48+60.:\"]) ?><\\|}{=^_%$#@!`~\n\
-        ->ajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~\n\
-        ekmflgdqvzntowyhxusp->aibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~"
-    );
+    set_plugboards(default_plugboards_cfg);
+    set_rotor_and_reflector(default_rotor_reflector_cfg, default_notch_cfg);
 
     char* output = malloc(strlen(input) + 1);
 

@@ -29,7 +29,7 @@ void init_enigma(void) {
     strcpy(plugboard_wiring, plugboards);
 
     for(int i = 0; i < rotors_count; i++) {
-        rotor_wiring[i] = rotors[i];
+        rotor_wiring[i] = (char*)rotors[i];
         rotor_number[i] = i;
         rotor_switch_pos[i] = notches[i];
         init_window[i] = char_window[i] = 'A';
@@ -39,8 +39,8 @@ void init_enigma(void) {
     reflector_type = 1;   
 }
 
-void set_rotor_and_reflector(char** rotors_cfg, char* reflectors_cfg) {
-    int n, rotor, rotor_pos;
+void set_rotor_and_reflector(const char** rotors_cfg, const char* reflectors_cfg) {
+    int n = 0, rotor, rotor_pos;
     char ch_temp;
 
     rotors_count = rotors_cfg[0][0] - '0';
@@ -68,13 +68,12 @@ void set_rotor_and_reflector(char** rotors_cfg, char* reflectors_cfg) {
     else if(reflectors_cfg[0] == 'c') n = 2;
     else if(reflectors_cfg[0] == 'B') n = 3;
     else if(reflectors_cfg[0] == 'C') n = 4;
-    else n = 0;
 
     reflector = (char*)refrectors[n];
     reflector_type = n;
 }
 
-void set_plugboards(char* cfg) {
+void set_plugboards(const char* cfg) {
     char p1, p2, ch_temp;
 
     for (int i = 0; i < strlen(cfg); i++) {

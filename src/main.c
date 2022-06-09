@@ -229,7 +229,6 @@ char* read_stdin(void) {
     printf("Insert input text: ");
 
     char* input_buffer = NULL;
-
     size_t len = 0;
     ssize_t line_size = getline(&input_buffer, &len, stdin);
 

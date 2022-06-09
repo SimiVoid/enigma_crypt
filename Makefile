@@ -6,4 +6,10 @@ src_files = $(shell find -name "*.c")
 src_files += $(shell find -name "*.s")
 
 all:
-	gcc $(GCC_PARAMS) -o enygma_crypt $(src_files)
+	@echo "Scaning projects files..."
+	@sleep 1
+	@echo "\033[0;32mFile to build:\033[0;m"
+	@echo $(src_files)
+	@echo "\033[0;32mBuilding\033[1;34m enygma_crypt\033[0;32m project...\033[0;m"
+	@gcc $(GCC_PARAMS) -o enygma_crypt $(src_files)
+	@echo "\033[0;33mFinished\033[0;m"
