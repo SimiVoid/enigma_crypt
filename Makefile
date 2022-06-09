@@ -1,6 +1,6 @@
 PROJECT_NAME = enygma_crypt
 INC_DIR = ./include
-GCC_PARAMS = -I$(INC_DIR) -g
+GCC_PARAMS = -I$(INC_DIR) -Wl,--allow-multiple-definition -g
 
 src_files = $(shell find -name "*.c")
 src_files += $(shell find -name "*.s")
