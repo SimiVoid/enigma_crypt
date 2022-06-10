@@ -95,7 +95,7 @@ void set_plugboards(const char* cfg) {
     }
 }
 
-void setup_rotor(int pos, int r) {
+static void setup_rotor(int pos, int r) {
     rotor_wiring[pos] = (char*)rotors[r];
     rotor_switch_pos[pos] = notches[r];
     rotor_number[pos] = r;
@@ -120,7 +120,7 @@ void turn_rotors() {
         turn_single_rotor(i, rotate[i]);
 }
 
-int turn_single_rotor(int rotor_num, int step) {
+static int turn_single_rotor(int rotor_num, int step) {
     if(step <= 0) return -1;
 
     rotors_position[rotor_num] = (rotors_position[rotor_num] + step) % N_CHARS;

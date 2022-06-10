@@ -24,10 +24,9 @@ void init_enigma(void);
 
 void set_rotor_and_reflector(const char** rotors_cfg, const char* reflectors_cfg);
 void set_plugboards(const char* cfg);
-void setup_rotor(int pos, int r);
-void set_rotor_position();
+static void setup_rotor(int pos, int r);
 
 void turn_rotors();
-int turn_single_rotor(int rotor_num, int step);
+static int turn_single_rotor(int rotor_num, int step);
 
 #endif
