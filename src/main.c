@@ -17,53 +17,18 @@ char* read_input_file(void);
 char* read_stdin(void);
 int write_output_file(char* output_file_content);
 
-void print_Help();
-int Enc_Dec();
+void print_help();
+enum operation_t gui();
 
 int main(int argc, char *argv[]) {
     enum operation_t operation_type = parse_args(argc, argv);
 
-    if(operation_type == HELP) {
-        print_Help();
-    }
-    else if(operation_type == GUI) {
-        int choice = Enc_Dec();
+    if(operation_type == HELP)
+        print_help();
+    else if(operation_type == GUI)
+        operation_type = gui();
 
-        if(choice == 1){
-            operation_type = ENCODING_FILE;
-        }
-        else if(choice == 2){
-            operation_type = ENCODING_FILEIN_STDOUT;
-        }
-        else if(choice == 3){
-            operation_type = ENCODING_STDIN_FILEOUT;
-        }
-        else if(choice == 4){
-            operation_type = ENCODING_STDIO;
-        }
-        else if(choice == 5){
-            operation_type = DECODING_FILE;
-        }
-        else if(choice == 6){
-            operation_type = DECODING_FILEIN_STDOUT;
-        }
-        else if(choice == 7){
-            operation_type = DECODING_STDIN_FILEOUT;
-        }
-        else if(choice == 8){
-            operation_type = DECODING_STDIO;
-        }
-        else if(choice == 9){
-            operation_type = HELP;
-        }
-        else if(choice == 100){
-            
-        }
-        else{
-            printf("Unexpected error.");
-        }
-    }
-    else if(operation_type == ENCODING_FILEIN_STDOUT) {
+    if(operation_type == ENCODING_FILEIN_STDOUT) {
         char* input_file_content = read_input_file();
         if(input_file_content == NULL)
             return EXIT_FAILURE;
@@ -285,28 +250,35 @@ int write_output_file(char* output_file_content) {
     return 0;
 }
 
-void print_Help(){
+void print_help() {
     printf("    HELP\n\n\
-    1) Encoding\n\
-        1) From file\n\
-            1) To file\n\
-            2) To console\n\
-        2) From console\n\
-            1) To file\n\
-            2) To console\n\
-    2) Decoding\n\
-        1) From file\n\
-            1) To file\n\
-            2) To console\n\
-        2) From console\n\
-            1) To file\n\
-            2) To console\n\
-    \n\n\
-    For example\
-    If you want to Encode your text in file and print it in console, you choose -> 1) -> 1) -> 2)");
+        \n\
+        -e - encoding\n\
+        -d - decoding\n\
+        -o str - output file name\n\
+        -i str - input file name\n\
+        -g - GUI (in cli)\n\
+        \n\
+        1) Encoding\n\
+            1) From file\n\
+                1) To file\n\
+                2) To console\n\
+            2) From console\n\
+                1) To file\n\
+                2) To console\n\
+        2) Decoding\n\
+            1) From file\n\
+                1) To file\n\
+                2) To console\n\
+            2) From console\n\
+                1) To file\n\
+                2) To console\n\
+        \n\n\
+        For example\n\
+        If you want to Encode your text in file and print it in console, you choose -> 1) -> 1) -> 2)\n\n");
 }
 
-int Enc_Dec(){
+enum operation_t gui() {
     int lev1 = 0;
     int lev2 = 0;
     int lev3 = 0;
@@ -316,137 +288,69 @@ int Enc_Dec(){
     1) Encoding\n\
     2) Decoding\n\
     To print HELP press 3");
+    fflush(stdin);
     scanf("%d", &lev1);
-    if (lev1 == 1)
-    {
-        // 1
+    if (lev1 == 1) {
         printf("\n\n\
         1) From file\n\
         2) From console\n");
+        fflush(stdin);
         scanf("%d", &lev2);
-        if (lev2 == 1)
-        {
+        if (lev2 == 1) {
             printf("\n\n\
             1) To file\n\
             2) To console\n");
+            fflush(stdin);
             scanf("%d", &lev3);
-            if (lev3 == 1)
-            {
-                // ENC File-File
-                //operation_type == ENCODING_FILE;
-                return 1;
-            }
-            else if (lev3 == 2)
-            {
-                // ENC File-Console
-                //operation_type == ENCODING_FILEIN_STDOUT;
-                return 2;
-            }
-            else
-            {
-                printf("Invalid input.\n\n");
-                return 100;
-            }
+            if (lev3 == 1) return ENCODING_FILE;
+            else if (lev3 == 2) return ENCODING_FILEIN_STDOUT;
+            else printf("Invalid input.\n\n");
         }
-        else if (lev2 == 2)
-        {
+        else if (lev2 == 2) {
             printf("\n\n\
             1) To file\n\
             2) To console\n");
+            fflush(stdin);
             scanf("%d", &lev3);
-            if (lev3 == 1)
-            {
-                // ENC Console-File
-                //operation_type == ENCODING_STDIN_FILEOUT;
-                return 3;
-            }
-            else if (lev3 == 2)
-            {
-                // ENC Console-Console
-                //operation_type == ENCODING_STDIO;
-                return 4;
-            }
-            else
-            {
-                printf("Invalid input.\n\n");
-                return 100;
-            }
+            if (lev3 == 1) return ENCODING_STDIN_FILEOUT;
+            else if (lev3 == 2) return ENCODING_STDIO;
+            else printf("Invalid input.\n\n");
         }
-        else
-        {
-            printf("Invalid input.\n\n");
-            return 100;
-        }
+        else printf("Invalid input.\n\n");
     }
-    else if (lev1 == 2)
-    {
-        // 2
+    else if (lev1 == 2) {
         printf("\n\n\
         1) From file\n\
         2) From console\n");
+        fflush(stdin);
         scanf("%d", &lev2);
-        if (lev2 == 1)
-        {
+        if (lev2 == 1) {
             printf("\n\n\
             1) To file\n\
             2) To console\n");
+
+            fflush(stdin);
             scanf("%d", &lev3);
-            if (lev3 == 1)
-            {
-                // DEC File-File
-                //operation_type == DECODING_FILE;
-                return 5;
-            }
-            else if (lev3 == 2)
-            {
-                // DEC File-Console
-                //operation_type == DECODING_FILEIN_STDOUT;
-                return 6;
-            }
-            else
-            {
-                printf("Invalid input.\n\n");
-                return 100;
-            }
+            if (lev3 == 1) return DECODING_FILE;
+            else if (lev3 == 2) return DECODING_FILEIN_STDOUT;
+            else printf("Invalid input.\n\n");
         }
-        else if (lev2 == 2)
-        {
+        else if (lev2 == 2) {
             printf("\n\n\
             1) To file\n\
             2) To console\n");
+            fflush(stdin);
             scanf("%d", &lev3);
-            if (lev3 == 1)
-            {
-                // DEC Console-File
-                //operation_type == DECODING_STDIN_FILEOUT;
-                return 7;
-            }
-            else if (lev3 == 2)
-            {
-                // DEC Console-Console
-                //operation_type == DECODING_STDIO;
-                return 8;
-            }
-            else
-            {
-                printf("Invalid input.\n\n");
-                return 100;
-            }
+            if (lev3 == 1) return DECODING_STDIN_FILEOUT;
+            else if (lev3 == 2) return DECODING_STDIO;
+            else printf("Invalid input.\n\n");
         }
-        else
-        {
-            printf("Invalid input.\n\n");
-            return 100;
-        }
+        else printf("Invalid input.\n\n");
     }
-    else if(lev1 == 3){
-        return 9;
-    }
-    else
-    {
-        printf("Invalid input.\n\n");
-        return 100;
-    }
+    else if(lev1 == 3) return HELP;
+    else printf("Invalid input.\n\n");
+    
+    return UNKNOWN;
 }
 
 #pragma GCC optimize("O0")

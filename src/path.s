@@ -5,106 +5,172 @@
 .type r_to_l_path, @function
 
 r_to_l_path:
-        pushq   %r13
-        pushq   %r12
-        pushq   %rbp
-        pushq   %rbx
-        movl    %edi, %r13d
-        movq    %r8, %rbx
-        movslq  %esi, %rsi
-        movq    (%rdx,%rsi,8), %r12
-        movslq  (%rcx,%rsi,4), %rax
-        movsbl  (%r12,%rax), %edi
-        movq    %r8, %rsi
+       pushq   %rbp
+        movq    %rsp, %rbp
+        subq    $48, %rsp
+        movl    %edi, %eax
+        movl    %esi, -24(%rbp)
+        movq    %rdx, -32(%rbp)
+        movq    %rcx, -40(%rbp)
+        movq    %r8, -48(%rbp)
+        movb    %al, -20(%rbp)
+        movl    -24(%rbp), %eax
+        cltq
+        leaq    0(,%rax,8), %rdx
+        movq    -32(%rbp), %rax
+        addq    %rdx, %rax
+        movq    (%rax), %rax
+        movq    %rax, -8(%rbp)
+        movl    -24(%rbp), %eax
+        cltq
+        leaq    0(,%rax,4), %rdx
+        movq    -40(%rbp), %rax
+        addq    %rdx, %rax
+        movl    (%rax), %eax
+        movslq  %eax, %rdx
+        movq    -8(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        movsbl  %al, %eax
+        movq    -48(%rbp), %rdx
+        movq    %rdx, %rsi
+        movl    %eax, %edi
         call    idx_of
-        movl    %eax, %ebp
-        movsbl  %r13b, %edi
-        movq    %rbx, %rsi
+        movl    %eax, -12(%rbp)
+        movsbl  -20(%rbp), %eax
+        movq    -48(%rbp), %rdx
+        movq    %rdx, %rsi
+        movl    %eax, %edi
         call    idx_of
-        addl    %ebp, %eax
+        movl    -12(%rbp), %edx
+        addl    %eax, %edx
+        movslq  %edx, %rax
+        imulq   $1991868891, %rax, %rax
+        shrq    $32, %rax
+        sarl    $5, %eax
+        movl    %edx, %ecx
+        sarl    $31, %ecx
+        subl    %ecx, %eax
+        imull   $69, %eax, %ecx
+        movl    %edx, %eax
+        subl    %ecx, %eax
+        movslq  %eax, %rdx
+        movq    -8(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        movsbl  %al, %eax
+        movq    -48(%rbp), %rdx
+        movq    %rdx, %rsi
+        movl    %eax, %edi
+        call    idx_of
+        subl    -12(%rbp), %eax
         movslq  %eax, %rdx
         imulq   $1991868891, %rdx, %rdx
-        sarq    $37, %rdx
+        shrq    $32, %rdx
+        sarl    $5, %edx
         movl    %eax, %ecx
         sarl    $31, %ecx
         subl    %ecx, %edx
-        imull   $69, %edx, %edx
-        subl    %edx, %eax
-        cltq
-        movsbl  (%r12,%rax), %edi
-        movq    %rbx, %rsi
-        call    idx_of
-        subl    %ebp, %eax
-        movslq  %eax, %rdx
-        imulq   $1991868891, %rdx, %rdx
-        sarq    $37, %rdx
-        movl    %eax, %ecx
-        sarl    $31, %ecx
-        subl    %ecx, %edx
-        imull   $69, %edx, %edx
-        subl    %edx, %eax
-        cltq
-        movzbl  (%rbx,%rax), %eax
-        popq    %rbx
-        popq    %rbp
-        popq    %r12
-        popq    %r13
+        imull   $69, %edx, %ecx
+        subl    %ecx, %eax
+        movl    %eax, %edx
+        movslq  %edx, %rdx
+        movq    -48(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        leave
         ret
 
 .global l_to_r_path
 .type l_to_r_path, @function
 
 l_to_r_path:
-        pushq   %r13
-        pushq   %r12
-        pushq   %rbp
-        pushq   %rbx
-        movl    %edi, %r13d
-        movq    %r8, %rbx
-        movslq  %esi, %rsi
-        movq    (%rdx,%rsi,8), %rbp
-        movslq  (%rcx,%rsi,4), %rax
-        movsbl  0(%rbp,%rax), %edi
-        movq    %r8, %rsi
-        call    idx_of
-        movl    %eax, %r12d
-        movsbl  %r13b, %edi
-        movq    %rbx, %rsi
-        call    idx_of
-        addl    %r12d, %eax
-        movslq  %eax, %rdx
-        imulq   $1991868891, %rdx, %rdx
-        sarq    $37, %rdx
-        movl    %eax, %ecx
-        sarl    $31, %ecx
-        subl    %ecx, %edx
-        imull   $69, %edx, %edx
-        subl    %edx, %eax
+         pushq   %rbp
+        movq    %rsp, %rbp
+        subq    $64, %rsp
+        movl    %edi, %eax
+        movl    %esi, -40(%rbp)
+        movq    %rdx, -48(%rbp)
+        movq    %rcx, -56(%rbp)
+        movq    %r8, -64(%rbp)
+        movb    %al, -36(%rbp)
+        movl    -40(%rbp), %eax
         cltq
-        movzbl  (%rbx,%rax), %ecx
-        movq    %rbp, %rdx
-        movl    $0, %eax
+        leaq    0(,%rax,8), %rdx
+        movq    -48(%rbp), %rax
+        addq    %rdx, %rax
+        movq    (%rax), %rax
+        movq    %rax, -16(%rbp)
+        movl    -40(%rbp), %eax
+        cltq
+        leaq    0(,%rax,4), %rdx
+        movq    -56(%rbp), %rax
+        addq    %rdx, %rax
+        movl    (%rax), %eax
+        movslq  %eax, %rdx
+        movq    -16(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        movsbl  %al, %eax
+        movq    -64(%rbp), %rdx
+        movq    %rdx, %rsi
+        movl    %eax, %edi
+        call    idx_of
+        movl    %eax, -20(%rbp)
+        movsbl  -36(%rbp), %eax
+        movq    -64(%rbp), %rdx
+        movq    %rdx, %rsi
+        movl    %eax, %edi
+        call    idx_of
+        movl    -20(%rbp), %edx
+        addl    %eax, %edx
+        movslq  %edx, %rax
+        imulq   $1991868891, %rax, %rax
+        shrq    $32, %rax
+        sarl    $5, %eax
+        movl    %edx, %ecx
+        sarl    $31, %ecx
+        subl    %ecx, %eax
+        imull   $69, %eax, %ecx
+        movl    %edx, %eax
+        subl    %ecx, %eax
+        movslq  %eax, %rdx
+        movq    -64(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        movsbl  %al, %eax
+        movl    %eax, -24(%rbp)
+        movl    $0, -4(%rbp)
+        jmp     .loop
+.loop_inc:
+        addl    $1, -4(%rbp)
 .loop:
-        cmpb    (%rdx), %cl
-        je      .end
-        addl    $1, %eax
-        addq    $1, %rdx
-        cmpl    $69, %eax
-        jne     .loop
+        cmpl    $68, -4(%rbp)
+        jg      .loop
+        movl    -4(%rbp), %eax
+        movslq  %eax, %rdx
+        movq    -16(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        movsbl  %al, %eax
+        cmpl    %eax, -24(%rbp)
+        jne     .loop_inc
 .end:
-        subl    %r12d, %eax
+        movl    -4(%rbp), %eax
+        subl    -20(%rbp), %eax
         movslq  %eax, %rdx
         imulq   $1991868891, %rdx, %rdx
-        sarq    $37, %rdx
+        shrq    $32, %rdx
+        sarl    $5, %edx
         movl    %eax, %ecx
         sarl    $31, %ecx
         subl    %ecx, %edx
-        imull   $69, %edx, %edx
-        subl    %edx, %eax
-        cltq
-        movzbl  (%rbx,%rax), %eax
-        popq    %rbx
-        popq    %rbp
-        popq    %r12
-        popq    %r13
+        imull   $69, %edx, %ecx
+        subl    %ecx, %eax
+        movl    %eax, %edx
+        movslq  %edx, %rdx
+        movq    -64(%rbp), %rax
+        addq    %rdx, %rax
+        movzbl  (%rax), %eax
+        leave
         ret
