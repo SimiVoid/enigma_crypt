@@ -53,6 +53,9 @@ int main(int argc, char *argv[]) {
         else if(choice == 8){
             operation_type = DECODING_STDIO;
         }
+        else if(choice == 9){
+            operation_type = HELP;
+        }
         else if(choice == 100){
             
         }
@@ -283,24 +286,24 @@ int write_output_file(char* output_file_content) {
 }
 
 void print_Help(){
-    printf("    HELP\n\n");
-        printf("    1) Encoding\n");
-        printf("        1) From file\n");
-        printf("            1) To file\n");
-        printf("            2) To console\n");
-        printf("        2) From console\n");
-        printf("            1) To file\n");
-        printf("            2) To console\n");
-        printf("    2) Decoding\n");
-        printf("        1) From file\n");
-        printf("            1) To file\n");
-        printf("            2) To console\n");
-        printf("        2) From console\n");
-        printf("            1) To file\n");
-        printf("            2) To console\n");
-        printf("\n\n");
-        printf("For example");
-        printf("If you want to Encode your text in file and print it in console, you choose -> 1) -> 1) -> 2)");
+    printf("    HELP\n\n\
+    1) Encoding\n\
+        1) From file\n\
+            1) To file\n\
+            2) To console\n\
+        2) From console\n\
+            1) To file\n\
+            2) To console\n\
+    2) Decoding\n\
+        1) From file\n\
+            1) To file\n\
+            2) To console\n\
+        2) From console\n\
+            1) To file\n\
+            2) To console\n\
+    \n\n\
+    For example\
+    If you want to Encode your text in file and print it in console, you choose -> 1) -> 1) -> 2)");
 }
 
 int Enc_Dec(){
@@ -308,28 +311,32 @@ int Enc_Dec(){
     int lev2 = 0;
     int lev3 = 0;
 
-    printf("    MENU\n");
-    printf("\n");
-    printf("    1) Encoding\n");
-    printf("    2) Decoding\n");
-    if (scanf("%d", &lev1) == 1)
+    printf("    MENU\n\
+    \n\
+    1) Encoding\n\
+    2) Decoding\n\
+    To print HELP press 3");
+    scanf("%d", &lev1);
+    if (lev1 == 1)
     {
         // 1
-        printf("\n\n");
-        printf("    1) From file\n");
-        printf("    2) From console\n");
-        if (scanf("%d", &lev2) == 1)
+        printf("\n\n\
+        1) From file\n\
+        2) From console\n");
+        scanf("%d", &lev2);
+        if (lev2 == 1)
         {
-            printf("\n\n");
-            printf("    1) To file\n");
-            printf("    2) To console\n");
-            if (scanf("%d", &lev3) == 1)
+            printf("\n\n\
+            1) To file\n\
+            2) To console\n");
+            scanf("%d", &lev3);
+            if (lev3 == 1)
             {
                 // ENC File-File
                 //operation_type == ENCODING_FILE;
                 return 1;
             }
-            else if (scanf("%d", &lev3) == 2)
+            else if (lev3 == 2)
             {
                 // ENC File-Console
                 //operation_type == ENCODING_FILEIN_STDOUT;
@@ -341,18 +348,19 @@ int Enc_Dec(){
                 return 100;
             }
         }
-        else if (scanf("%d", &lev2) == 2)
+        else if (lev2 == 2)
         {
-            printf("\n\n");
-            printf("    1) To file\n");
-            printf("    2) To console\n");
-            if (scanf("%d", &lev3) == 1)
+            printf("\n\n\
+            1) To file\n\
+            2) To console\n");
+            scanf("%d", &lev3);
+            if (lev3 == 1)
             {
                 // ENC Console-File
                 //operation_type == ENCODING_STDIN_FILEOUT;
                 return 3;
             }
-            else if (scanf("%d", &lev3) == 2)
+            else if (lev3 == 2)
             {
                 // ENC Console-Console
                 //operation_type == ENCODING_STDIO;
@@ -370,24 +378,26 @@ int Enc_Dec(){
             return 100;
         }
     }
-    else if (scanf("%d", &lev1) == 2)
+    else if (lev1 == 2)
     {
         // 2
-        printf("\n\n");
-        printf("    1) From file\n");
-        printf("    2) From console\n");
-        if (scanf("%d", &lev2) == 1)
+        printf("\n\n\
+        1) From file\n\
+        2) From console\n");
+        scanf("%d", &lev2);
+        if (lev2 == 1)
         {
-            printf("\n\n");
-            printf("    1) To file\n");
-            printf("    2) To console\n");
-            if (scanf("%d", &lev3) == 1)
+            printf("\n\n\
+            1) To file\n\
+            2) To console\n");
+            scanf("%d", &lev3);
+            if (lev3 == 1)
             {
                 // DEC File-File
                 //operation_type == DECODING_FILE;
                 return 5;
             }
-            else if (scanf("%d", &lev3) == 2)
+            else if (lev3 == 2)
             {
                 // DEC File-Console
                 //operation_type == DECODING_FILEIN_STDOUT;
@@ -399,18 +409,19 @@ int Enc_Dec(){
                 return 100;
             }
         }
-        else if (scanf("%d", &lev2) == 2)
+        else if (lev2 == 2)
         {
-            printf("\n\n");
-            printf("    1) To file\n");
-            printf("    2) To console\n");
-            if (scanf("%d", &lev3) == 1)
+            printf("\n\n\
+            1) To file\n\
+            2) To console\n");
+            scanf("%d", &lev3);
+            if (lev3 == 1)
             {
                 // DEC Console-File
                 //operation_type == DECODING_STDIN_FILEOUT;
                 return 7;
             }
-            else if (scanf("%d", &lev3) == 2)
+            else if (lev3 == 2)
             {
                 // DEC Console-Console
                 //operation_type == DECODING_STDIO;
@@ -427,6 +438,9 @@ int Enc_Dec(){
             printf("Invalid input.\n\n");
             return 100;
         }
+    }
+    else if(lev1 == 3){
+        return 9;
     }
     else
     {
