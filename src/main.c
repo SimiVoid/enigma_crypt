@@ -7,6 +7,7 @@
 #include <enigma_encoding.h>
 #include <enigma_decoding.h>
 #include <operation_type.h>
+#include <clear.h>
 
 char* input_file_path;
 char* output_file_path;
@@ -228,6 +229,7 @@ char* read_input_file(void) {
 }
 
 char* read_stdin(void) {
+    fflush(stdin);
     printf("Insert input text: ");
 
     char* input_buffer = NULL;
@@ -272,10 +274,7 @@ void print_help() {
                 2) To console\n\
             2) From console\n\
                 1) To file\n\
-                2) To console\n\
-        \n\n\
-        For example\n\
-        If you want to Encode your text in file and print it in console, you choose -> 1) -> 1) -> 2)\n\n");
+                2) To console\n\n");
 }
 
 enum operation_t gui() {
@@ -283,11 +282,12 @@ enum operation_t gui() {
     int lev2 = 0;
     int lev3 = 0;
 
+    CLEAR();
+
     printf("    MENU\n\
     \n\
     1) Encoding\n\
-    2) Decoding\n\
-    To print HELP press 3");
+    2) Decoding\n");
     fflush(stdin);
     scanf("%d", &lev1);
     if (lev1 == 1) {

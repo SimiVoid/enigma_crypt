@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
+#include <enigma.h>
 
 extern int idx_of(char c, const char* collection);
 extern char r_to_l_path(char c, int rotor_number, char** rotor_wiring, int* rotor_pos, const char* alphabet);
@@ -15,10 +16,10 @@ const char* default_rotor_reflector_cfg[] = {
             "byruhqsldpxngokmiebfzcwvjat*[\"7)],3(/;6 .:8415&2+-90'?<>\\|}{=_^%$#@`!~"
         };
 const char* default_plugboards_cfg = "abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?\n\
-                                    abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?";
+abcdefghijklmnopqrstuvwxyz0123456789.,:; ()[]'\"-+/*&~`!@#$%^_={}|\\<>?";
 const char* default_notch_cfg =  "bdfhjlcprtxvznyeiwg->akmusqo13579,2(['/-&;*48+60.:\"]) ?><\\|}{=^_%$#@!`~\n\
-        ->ajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~\n\
-        ekmflgdqvzntowyhxusp->aibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~";
+->ajdksiruxblhwtmcqgznpyfvoe093.]8[\"/1,7+':2)6&;(*5- 4?><\\|}{=^_%$#@!`~\n\
+ekmflgdqvzntowyhxusp->aibrcj4.:5,63)-&;' +*7/\"](081[29?><\\|}{=^_%$#@!`~";
 
 char* enigma_encoding(char* input) {
     init_enigma();
@@ -27,10 +28,11 @@ char* enigma_encoding(char* input) {
     set_plugboards(default_plugboards_cfg);
     set_rotor_and_reflector(default_rotor_reflector_cfg, default_notch_cfg);
 
-    char* output = malloc(strlen(input) + 1);
+    char* output = malloc(strlen(input) * sizeof(char));
 
-    for (int i = 0; i < strlen(input); i++)
+    for (int i = 0; i < strlen(input) - 1; i++)
         output[i] = encrypt_char(input[i]);
+    output[strlen(input) - 1] = '\0';
 
     return output;
 }

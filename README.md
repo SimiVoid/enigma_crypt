@@ -1,15 +1,10 @@
 # enigma_crypt
 
-#### TODO:
+./enygma_crypt [flags]
 
-* Parsowanie przełączników:
-    * -e - encoding
-    * -d - decoding
-    * -o str - nazwa pliku wyjściowego / stdout
-    * -i str - nazwa pliku wejściowego / stdin
-    * -g - interfejs graficzny (w cli)
-
-* Odczyt pliku
-* Encodowanie i zapis do pliku
-* Decodowanie i zapis do pliku
-* Preudo GUI
+    * -e | --encoding
+    * -d | --decoding
+    * -o str | --input str - nazwa pliku wyjściowego / stdin
+    * -i str | --input str - nazwa pliku wejściowego / stdin
+    * -g | --gui - wyświetla cli gui
+    * -h | --help - wyświetla pomoc
